@@ -1,0 +1,85 @@
+Module Bookstore
+{
+    Entity Book
+    {
+        ShortString Code { Unique; Required; }
+        ShortString Title { Required; }
+        Integer NumberOfPages;
+        Reference Author Bookstore.Person;
+    }
+
+    Entity Person
+    {
+        ShortString Name;
+    }
+
+    Entity Chapter
+    {
+        Reference Book { Detail; }
+        LongString Heading;
+    }
+
+    Entity ChildrensBook
+    {
+        Extends Bookstore.Book;
+
+        Integer AgeFrom;
+        Integer AgeTo;
+        IntegerRange AgeFrom AgeTo; // A simple validation.
+    }
+
+    Entity ForeignBook
+    {
+        Extends Bookstore.Book;
+
+        ShortString OriginalLanguage;
+        Reference Translator Bookstore.Person;
+    }
+
+    Entity Topic
+    {
+        ShortString Name { Unique; Required; }
+    }
+
+    Entity BookTopic
+    {
+        Reference Book { Detail; }
+        Reference Topic { Required; }
+
+        UniqueMultiple 'Book Topic';
+    }
+
+    Entity Employee
+    {
+        ShortString Name;
+        Integer VAT { Unique; }
+    }
+
+    Entity Manager
+    {
+        Extends Bookstore.Employee;
+
+        LongString Bonuses;
+    }
+
+    Entity EducationalRecord
+    {
+        Date DateOfRecord;
+        LongString Description;
+
+        Reference Employee{ Detail; }
+    }
+
+    Entity Department
+    {
+        ShortString Code { Unique; Required; }
+        LongString Description;
+    }
+
+    Entity EmployeeDepartment{
+        Reference Employee {Detail;}
+        Reference Department {Required;}
+
+        UniqueMultiple 'Employee Department';
+    }
+}
