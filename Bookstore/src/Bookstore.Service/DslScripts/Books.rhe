@@ -100,10 +100,80 @@ Module Bookstore
         DateTime Modified { ModificationTimeOf Bookstore.Department.Code; }
     }
 
-    Entity EmployeeDepartment{
+    Entity EmployeeDepartment
+    {
         Reference Employee {Detail;}
         Reference Department {Required;}
 
         UniqueMultiple 'Employee Department';
     }
+
+    Browse BookGrid Bookstore.Book
+    {
+        Take Code;
+        Take Title;
+        Take 'Author.Name';
+        Take TranslatorName 'Extension_ForeignBook.Translator.Name';
+        Take NumberOfChapters 'Extension_BookInfo.NumberOfChapters'; 
+    }
+
+    Browse BookList Bookstore.Book
+    {
+        Take Title;
+        Take 'Author.Name';
+        Take NumberOfTopics 'Extension_AllBookTopics.NumberOfTopics';
+    }
+
+    SqlQueryable BookInfo <SQL\BookInfo.sql>
+    {
+        Extends Bookstore.Book;
+        Integer NumberOfChapters;
+
+        AutodetectSqlDependencies;
+    }
+
+    SqlQueryable AllBookTopics <SQL\AllBookTopics.sql>
+    {
+        Extends Bookstore.Book;
+        Integer NumberOfTopics;
+        ShortString Title;
+
+        AutodetectSqlDependencies;
+    }
+
+    Computed ExpectedBookRating 'repository =>
+            {
+                var books = repository.Bookstore.Book.Query()
+                    .Select(b =>
+                        new
+                        {
+                            b.ID,
+                            b.Title,
+                            IsForeign = b.Extension_ForeignBook.ID != null
+                        })
+                    .ToList();
+
+                var ratings = new List<ExpectedBookRating>();
+                foreach (var book in books)
+                {
+                    decimal rating = 0;
+
+                    if (book.Title?.IndexOf("super", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                        rating += 100;
+
+                    if (book.Title?.IndexOf("great", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                        rating += 50;
+
+                    if (book.IsForeign)
+                        rating *= 1.2m;
+
+                    ratings.Add(new ExpectedBookRating { ID = book.ID, Rating = rating });
+                }
+
+                return ratings.ToArray();
+            }'
+        {
+            Extends Bookstore.Book;
+            Decimal Rating;
+        }
 }
