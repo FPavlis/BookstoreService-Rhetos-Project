@@ -52,7 +52,7 @@ Module Bookstore
     Entity Employee
     {
         ShortString Name;
-        Integer VAT { Unique; }
+        Integer VAT { Unique; Required; }
     }
 
     Entity Manager
