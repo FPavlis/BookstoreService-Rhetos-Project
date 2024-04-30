@@ -2,7 +2,7 @@ Module Bookstore
 {
     Entity Book
     {
-        ShortString Code { Unique; Required; }
+        ShortString Code { AutoCode; DefaultValue 'item => "BOOK+++"'; DenyUserEdit; }
         ShortString Title { Required; }
         Integer NumberOfPages;
         Reference Author Bookstore.Person;
@@ -17,6 +17,8 @@ Module Bookstore
     {
         Reference Book { Detail; }
         LongString Heading;
+
+
     }
 
     Entity ChildrensBook
@@ -39,6 +41,9 @@ Module Bookstore
     Entity Topic
     {
         ShortString Name { Unique; Required; }
+
+        ItemFilter ContainsLockMark 'item => item.Name.Contains("lock")';
+		Lock ContainsLockMark '[Test] Name contains lock mark.';
     }
 
     Entity BookTopic
@@ -53,6 +58,18 @@ Module Bookstore
     {
         ShortString Name;
         Integer VAT { Unique; Required; }
+        ShortString Code { RegExMatch "\d{7,10}" "Code must have 7 to 10 digits."; }
+        Integer TestPeriod { MinValue 1; MaxValue 12; }
+        ShortString Iban { Required; Unique; MinLength 21; MaxLength 21; }
+
+        DateTime WorkStarted { Required; }
+        DateTime WorkFinished;
+
+        ItemFilter workDidntStart 'item => item.WorkStarted == null';
+		LockProperty WorkFinished.workDidntStart 'WorkFinished is locked if WorkStarted didnt start.';
+
+        ItemFilter FinishBeforeStart 'employee => employee.WorkFinished != null && employee.WorkFinished.Value < employee.WorkStarted.Value';
+        InvalidData FinishBeforeStart 'It is not allowed to enter a WorkFinished time before the WorkStarted time.';
     }
 
     Entity Manager
@@ -66,14 +83,21 @@ Module Bookstore
     {
         Date DateOfRecord;
         LongString Description;
+        Deactivatable;
+
+        DateTime Created { CreationTime; }
 
         Reference Employee{ Detail; }
+
+        Logging { AllProperties; }
     }
 
     Entity Department
     {
         ShortString Code { Unique; Required; }
         LongString Description;
+
+        DateTime Modified { ModificationTimeOf Bookstore.Department.Code; }
     }
 
     Entity EmployeeDepartment{
