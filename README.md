@@ -51,10 +51,11 @@ repository.Bookstore.Book.Query().Select(b => new {Title = b.Title, Author = b.A
 Action:
 ```
    var actionParameter = new Bookstore.InsertSpecificBooks
-		{
-			NumberOfBooks = 2,
-			Title = "Tom and Jerry"
-		};
+	{
+           NumberOfBooks = 2,
+           Title = "Tom and Jerry"
+	};
+
    repository.Bookstore.InsertSpecificBooks.Execute(actionParameter);
    scope.CommitAndClose();
 ```
