@@ -34,3 +34,27 @@ Module Bookstore;
    InvalidData BookStore.Book.CommonMisspelling 'It is not allowed to enter misspelled word "curiousity"';
    Logging BookStore.Book;
 ```
+## DAY 2
+### LINQPad
+
+Load:
+```
+repository.Bookstore.Book.Load().Dump();
+```
+
+Query:
+```
+repository.Bookstore.Book.Query().Select(b => new {Title = b.Title, Author = b.Author.Name}).ToList().Dump();
+repository.Bookstore.Book.Query().Select(b => new {Title = b.Title, Author = b.Author.Name}).ToString().Dump();
+```
+
+Action:
+```
+   var actionParameter = new Bookstore.InsertSpecificBooks
+		{
+			NumberOfBooks = 2,
+			Title = "Tom and Jerry"
+		};
+   repository.Bookstore.InsertSpecificBooks.Execute(actionParameter);
+   scope.CommitAndClose();
+```
