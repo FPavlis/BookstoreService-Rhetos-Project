@@ -43,6 +43,17 @@ Module Bookstore
 
             return books;
         }';
+
+        ComposableFilterBy 'System.String[]' '(query, repository, titles) =>
+        {
+             return query.Where(book => titles.Contains(book.Title));
+        }';
+
+         ComposableFilterBy 'Bookstore.Person' '(query, repository, author) =>
+         {
+             return query.Where(book => book.AuthorID == author.ID
+                 || book.Author.Name == author.Name);
+         }';
     }
 
     Parameter LongBooks2 {}
