@@ -1,5 +1,7 @@
 Module Bookstore
 {
+    AutoDetectSqlDependencies;
+
     Entity Book
     {
         ShortString Code { AutoCode; DefaultValue 'item => "BOOK+++"'; DenyUserEdit; }
@@ -99,6 +101,8 @@ Module Bookstore
     {
         ShortString Name;
     }
+
+
 
     Entity Chapter
     {
@@ -328,5 +332,18 @@ Module Bookstore
     {
         Integer NumberOfBooks;
         ShortString Title;
+    }
+
+    SqlView AllAuthors <SQL\AllAuthors.sql>{
+        SqlDependsOn Bookstore.Person;
+        AutodetectSqlDependencies;
+    }
+
+    SqlQueryable AllBookAuthors <SQL\AllAuthors.sql>
+    {
+        Extends Bookstore.Person;
+        ShortString Name;
+
+        AutodetectSqlDependencies;
     }
 }
