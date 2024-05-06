@@ -8,6 +8,7 @@ Module Bookstore
         ShortString Title { Required; }
         Integer NumberOfPages;
         Reference Author Bookstore.Person;
+        Deactivatable { DeactivateOnDelete; }
 
         ItemFilter LongBooks 'item => item.NumberOfPages >= 500';
 
@@ -152,6 +153,7 @@ Module Bookstore
         ShortString Code { RegExMatch "\d{7,10}" "Code must have 7 to 10 digits."; }
         Integer TestPeriod { MinValue 1; MaxValue 12; }
         ShortString Iban { Required; Unique; MinLength 21; MaxLength 21; }
+        PhoneNumber PrimaryPhoneNumber;
 
         DateTime WorkStarted { Required; }
         DateTime WorkFinished;
