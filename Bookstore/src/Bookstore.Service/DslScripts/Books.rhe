@@ -9,6 +9,7 @@ Module Bookstore
         Integer NumberOfPages;
         Reference Author Bookstore.Person;
         Deactivatable { DeactivateOnDelete; }
+        MonitoredRecord;
 
         ItemFilter LongBooks 'item => item.NumberOfPages >= 500';
 
@@ -428,5 +429,9 @@ Module Bookstore
                             itemsWithModifiedScore.oldValue.BookTitle));
                 ';
         }
+    }
+
+    Entity CodeTest{
+        CodeTable;
     }
 }
