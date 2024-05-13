@@ -2,14 +2,39 @@ Module Bookstore
 {
     AutoDetectSqlDependencies;
 
+    Polymorphic SalesItem
+    {
+        ShortString Code;
+        Money Price;
+        ShortString Description;
+    }
+
+    Entity Food 
+    {
+        ShortString Code {AutoCode; DefaultValue 'item => "F+++"';}
+        Money Price {Required;}
+        ShortString Description;
+        Integer Calories;
+
+        Is Bookstore.SalesItem;
+    }
+
     Entity Book
     {
         ShortString Code { AutoCode; DefaultValue 'item => "BOOK+++"'; DenyUserEdit; }
+        Money Price;
         ShortString Title { Required; }
         Integer NumberOfPages;
         Reference Author Bookstore.Person;
         Deactivatable { DeactivateOnDelete; }
-        MonitoredRecord;
+        MonitoredRecord Records;
+        
+        Is Bookstore.SalesItem
+        {
+            Implements Bookstore.SalesItem.Description "Title + ISNULL (', ' + (SELECT Name FROM Bookstore.Person WHERE ID = Bookstore.Book.AuthorID), '')";
+
+            WHERE 'Price IS NOT NULL';
+        }
 
         ItemFilter LongBooks 'item => item.NumberOfPages >= 500';
 
@@ -73,6 +98,19 @@ Module Bookstore
         Integer MinimumPages;
         Bool ForeignBooksOnly;
         Bool MaskTitles;
+    }
+
+    Browse SalesItemGrid Bookstore.SalesItem
+    {
+        Take Code;
+        Take Price;
+        Take 'Book.NumberOfPages';
+    }
+
+    Entity SalesItemComment
+    {
+        Reference SalesItem { Detail; }
+        LongString Comment;
     }
 
     Entity Disposal

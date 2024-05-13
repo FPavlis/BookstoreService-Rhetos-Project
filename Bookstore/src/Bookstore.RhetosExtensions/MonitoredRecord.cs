@@ -19,6 +19,7 @@ namespace Bookstore.RhetosExtensions
     {
         [ConceptKey]
         public EntityInfo Entity { get; set; }
+        public string Name { get; set; }
     }
 
     [Export(typeof(IConceptMacro))]
@@ -26,6 +27,7 @@ namespace Bookstore.RhetosExtensions
     {
         public IEnumerable<IConceptInfo> CreateNewConcepts(MonitoredRecordInfo conceptInfo, IDslModel existingConcepts)
         {
+
             var newConcepts = new List<IConceptInfo>();
 
             var createdAt = new DateTimePropertyInfo
