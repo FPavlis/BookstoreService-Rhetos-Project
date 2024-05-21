@@ -1,7 +1,7 @@
 # BookstoreService-Rhetos-Project
 A Rhetos Project about a bookstore library.
 
-## DAY 1
+## NOTES#1
 ### Nested vs Flat Statements
 
 ```
@@ -34,7 +34,7 @@ Module Bookstore;
    InvalidData BookStore.Book.CommonMisspelling 'It is not allowed to enter misspelled word "curiousity"';
    Logging BookStore.Book;
 ```
-## DAY 2
+## NOTES#2
 ### LINQPad
 
 Load:
